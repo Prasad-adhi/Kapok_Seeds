@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "733231911519",
+    "project_id": "kapok-seeds",
+    "storage_bucket": "kapok-seeds.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733231911519:android:26b2ba6447f92e5e8241ea",
+        "android_client_info": {
+          "package_name": "com.example.v2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQJf3ckFLAeUAck61GeVjitWW8X31uAlE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,44 @@
+import 'package:firebase_core/firebase_core.dart';
+//import 'firebase_options.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'OrgSignup.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 
-void main() {
+Future<Map<String, String>> readConfigFile() async {
+  final configString = await rootBundle.loadString('assets/firebase_config.txt');
+  final configLines = LineSplitter.split(configString);
+  final configMap = <String, String>{};
+
+  for (var line in configLines) {
+    final keyValue = line.split(':');
+    if (keyValue.length == 2) {
+      configMap[keyValue[0]] = keyValue[1];
+    }
+  }
+
+  return configMap;
+}
+
+
+
+Future main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  final config = await readConfigFile();
+    if(kIsWeb)
+    {
+      await Firebase.initializeApp(
+          options: FirebaseOptions(
+          apiKey: config['apiKey']!,
+          appId: config['appId']!,
+          messagingSenderId: config['messagingSenderId']!,
+          projectId: config['projectId']!,
+        )
+      );
+    }
+
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
