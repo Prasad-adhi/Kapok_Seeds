@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'Firebase_auth_services.dart';
+import 'Users.dart';
 
 class OrgSignup extends StatefulWidget {
   @override
@@ -16,6 +20,7 @@ class _OrgSignupState extends State<OrgSignup> {
   final TextEditingController _conf_password_controller1 = TextEditingController();
   bool _passwordVisible = false;
   bool _confpasswordvisible = false;
+  final FirebaseAuthService _auth = FirebaseAuthService();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -123,7 +128,7 @@ class _OrgSignupState extends State<OrgSignup> {
   }
 
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       // Form is valid, process the data
       print('Name: ${_name_controller1.text}');
@@ -132,6 +137,35 @@ class _OrgSignupState extends State<OrgSignup> {
       print('Email: ${_email_controller1.text}');
       print('Password: ${_password_controller1.text}');
       print('Confirm password: ${_conf_password_controller1.text}');
+
+      User? user = await _auth.signUpWithEmailAndPassword(_email_controller1.text, _password_controller1.text);
+
+      if(user!=null)
+        {
+          print("User is Successfully created");
+          // final firestore = FirebaseFirestore.instance;
+          // await firestore.collection("Organizations").doc().set(
+          //   {
+          //     "Name": _address_controller1.text,
+          //     "Number": _number_controller1.text,
+          //     "Address": _address_controller1.text,
+          //     "Email": _email_controller1.text,
+          //     "Password": _password_controller1.text
+          //   }
+          // );
+
+          _createData(OrganizationUserModel(
+              name: _name_controller1.text,
+              number:_number_controller1.text,
+              address: _address_controller1.text,
+              email: _email_controller1.text,
+              password: _password_controller1.text
+            )
+          );
+        }
+      else{
+        print("Some error occured");
+      }
     }
   }
 
@@ -258,4 +292,21 @@ class _OrgSignupState extends State<OrgSignup> {
 
     super.dispose();
   }
+}
+
+void _createData(OrganizationUserModel orgusermodel){
+  final userCollection = FirebaseFirestore.instance.collection("Organizations");
+  String id = userCollection.doc().id;
+
+  final newUser = OrganizationUserModel(
+      name: orgusermodel.name,
+      number: orgusermodel.number,
+      address: orgusermodel.address,
+      email: orgusermodel.email,
+      password: orgusermodel.password,
+      id: id
+  ).toJson();
+
+
+  userCollection.doc(id).set(newUser);
 }

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'OrgSignup.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
+import "Users.dart";
 
 Future<Map<String, String>> readConfigFile() async {
   final configString = await rootBundle.loadString('assets/firebase_config.txt');
@@ -13,8 +14,10 @@ Future<Map<String, String>> readConfigFile() async {
 
   for (var line in configLines) {
     final keyValue = line.split(':');
-    if (keyValue.length == 2) {
-      configMap[keyValue[0]] = keyValue[1];
+    if (keyValue.length >= 2) {
+      final key = keyValue[0].trim();
+      final value = keyValue.sublist(1).join(':').trim();
+      configMap[key] = value;
     }
   }
 
@@ -58,6 +61,7 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+
 }
 
 
